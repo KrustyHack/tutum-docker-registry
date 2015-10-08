@@ -1,0 +1,24 @@
+registry:
+  restart: on-failure
+  image: registry
+  ports:
+    - 5000:5000
+  environment:
+    STORAGE_PATH: /datas
+    HOME: /
+    PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    SETTINGS_FLAVOR: dev
+    SEARCH_BACKEND: sqlalchemy
+  volumes:
+    - /home/docker/registry-v1/registry:/datas
+registryui:
+  restart: on-failure
+  image: konradkleine/docker-registry-frontend
+  ports:
+    - 5001:80
+  environment:
+    ENV_MODE_BROWSE_ONLY: True
+    ENV_DOCKER_REGISTRY_HOST: registry
+    ENV_DOCKER_REGISTRY_PORT: 5000
+  links:
+    - registry
